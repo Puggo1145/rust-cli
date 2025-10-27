@@ -11,9 +11,6 @@ fn main() {
         process::exit(1);
     });
 
-    println!("Searching for {}", config.query);
-    println!("In file {}", config.file_path);
-
     if let Err(e) = run(config) {
         println!("Application error {e}");
         process::exit(1);
@@ -41,8 +38,9 @@ impl Config {
 fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let contents = fs::read_to_string(config.file_path)?;
 
-    for line in search(&config.query, &contents) {
-        println!("{line}");
+    let found_lines = search(&config.query, &contents);
+    for (index, line) in found_lines.iter().enumerate() {
+        println!("Found at line {}: {}", index + 1, line);
     }
 
     Ok(())
